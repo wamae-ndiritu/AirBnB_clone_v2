@@ -3,16 +3,11 @@
 import uuid
 from datetime import datetime
 
-Base = declarative_base()
-
-
 class BaseModel:
-    """A base class that will define all common 
-    attributes for other classes
-    """
-    id = Column(string(68), unique=True, nullable=False, primary_key=True)
-    created_at = Column(DateTime, nullable=False, default=(datetime.utcnow()))
-    updated_at = Column(DateTime, nullable=False, default=(datetime.utcnow()))
+    """A base class for all hbnb models"""
+    id = str(uuid.uuid4())
+    created_at = datetime.now()
+    updated_at = datetime.now()
 
     def __init__(self, *args, **kwargs):
         """Instatntiates a new model"""
