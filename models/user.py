@@ -7,6 +7,7 @@ from sqlalchemy.orm import relationship
 from models.place import Place
 from models.review import Review
 
+<<<<<<< HEAD
 class User(BaseModel, Base):
     """This class defines a user by various 
     Attributes:
@@ -22,3 +23,12 @@ class User(BaseModel, Base):
     last_name = Column(String(128))
     places = relationship("Place", cascade='all, delete, delete-orphan', backref="user")
     reviews = relationship("Review", cascade='all, delete, delete-orphan', backref="user")
+=======
+
+class User(BaseModel):
+    """This class defines a user by various attributes"""
+    email = ''
+    password = ''
+    first_name = ''
+    last_name = ''
+>>>>>>> parent of 46146d0... update user to be in dbs
