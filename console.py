@@ -260,7 +260,8 @@ class HBNBCommand(cmd.Cmd):
                         new_instance = HBNBCommand.classes[args](**v)
                         print_list.append(str(new_instance))
                 else:
-                    print_list.append(str(v))
+                    # from db storage
+                    print_list.append(v)
         else:
             for k, v in storage.objects().items():
                 if storage_type != 'db':
@@ -269,8 +270,11 @@ class HBNBCommand(cmd.Cmd):
                     print_list.append(str(new_instance))
                 else:
                     print_list.append(str(v))
-
-        print(print_list)
+        # Print the string representation of the instances
+        print('[', end="")
+        for i, item in enumerate(print_list):
+            print(item, end="" if i == len(print_list) - 1 else "\n")
+        print(']')
 
     def help_all(self):
         """ Help information for the all command """
