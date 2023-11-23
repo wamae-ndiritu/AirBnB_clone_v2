@@ -1,7 +1,18 @@
 #!/usr/bin/python3
-""" State Module for HBNB project """
-from models.base_model import BaseModel
+""" instances amenities """
+from models.base_model import BaseModel, Base
+from sqlalchemy import Column, Integer, String, ForeignKey, Table
+from sqlalchemy.orm import relationship
+from models.place import Place
+from models import storage_type
 
+class Amenity(BaseModel, Base):
+    """Permit to add the amenities for places"""
+    __tablename__ = "amenities"
+    if storage_type == "db":
+        name = Column(String(128), nullable=False)
+        place_amenities = relationship(
+                'Place', secondary=Place.place_amenity)
 
-class Amenity(BaseModel):
-    name = ""
+    else:
+        name = ""
