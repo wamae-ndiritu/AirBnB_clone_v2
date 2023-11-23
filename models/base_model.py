@@ -4,21 +4,17 @@ import uuid
 from datetime import datetime
 from sqlalchemy import Column, DateTime, String
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm.state import InstanceState
 from models import storage_type
 
 Base = declarative_base()
 
 class BaseModel:
     """A base class for all hbnb models"""
-    if storage_type == 'db':
-        id = Column(String(68), primary_key=True, nullable=False)
-        created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
-        updated_at = Column(DateTime, default=datetime.utcnow, nullable=False)
-    else:
-        id = uuid.uuid4()
-        created_at = datetime.now()
-        updated_at = datetime.now()
-
+    id = Column(String(68), primary_key=True, nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+    updated_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+    
     def __init__(self, *args, **kwargs):
         """Instatntiates a new model"""
         if not kwargs:
@@ -43,7 +39,13 @@ class BaseModel:
     def __str__(self):
         """Returns a string representation of the instance"""
         cls = (str(type(self)).split('.')[-1]).split('\'')[0]
-        return '[{}] ({}) {}'.format(cls, self.id, self.__dict__)
+        dictionary = {}
+
+        # Copy attributes to the dictionary
+        for key, value in self.__dict__.items():
+            if not isinstance(value, InstanceState) and not key.startswith('_'):
+                dictionary[key] = value
+        return '[{}] ({}) {}'.format(cls, self.id, dictionary)
 
     def save(self):
         from models import storage
@@ -55,9 +57,10 @@ class BaseModel:
     def to_dict(self):
         """Convert instance into dict format"""
         dictionary = {}
-        dictionary.update(self.__dict__)
-        dictionary.update({'__class__': self.__class__.__name__})
-        dictionary.pop("_sa_instance_state", None)
+        for key, value in self.__dict__.items():
+            if not isinstance(value, InstanceState) and not key.startswith('_'):
+                dictionary[key] = value
+        dictionary['__class__'] = self.__class__.__name__
         dictionary['created_at'] = self.created_at.isoformat()
         dictionary['updated_at'] = self.updated_at.isoformat()
         return dictionary
