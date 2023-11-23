@@ -259,8 +259,8 @@ class HBNBCommand(cmd.Cmd):
                     if k.split('.')[0] == args:
                         new_instance = HBNBCommand.classes[args](**v)
                         print_list.append(str(new_instance))
-                    else:
-                        print_list.append(str(v))
+                else:
+                    print_list.append(str(v))
         else:
             for k, v in storage.objects().items():
                 if storage_type != 'db':
